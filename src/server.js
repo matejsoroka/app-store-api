@@ -57,33 +57,42 @@ app.listen(HTTP_PORT, () => {
 // });
 
 app.post('/gplay/metadata', (req, res) => {
-    const errors = [];
-    if (!req.body.package_name) {
-        errors.push('No package_name specified');
+    var errors=[]
+    if (!req.body.package_name){
+        errors.push("No package_name specified");
     }
-    if (errors.length) {
-        res.status(400).json({ error: errors.join(',') });
+    if (errors.length){
+        res.status(400).json({"error":errors.join(",")});
         return;
     }
 
-    gplay
-        .app({ appId: req.body.package_name })
-        .then((response) => res.json(response))
-        .catch((err) => res.status(404).json({ error: err.toString() }));
+    let payload = {appId: req.body.package_name}
+
+    if (req.body.country) {
+        payload.country = req.body.country
+    }
+
+    gplay.app(payload).then(response => res.json(response))
+        .catch(err => res.status(404).json({"error":err.toString()}));
+
 });
 
 app.post('/appstore/metadata', (req, res) => {
-    const errors = [];
-    if (!req.body.package_name) {
-        errors.push('No package_name specified');
+    var errors=[]
+    if (!req.body.package_name){
+        errors.push("No package_name specified");
     }
-    if (errors.length) {
-        res.status(400).json({ error: errors.join(',') });
+    if (errors.length){
+        res.status(400).json({"error":errors.join(",")});
         return;
     }
 
-    appStore
-        .app({ appId: req.body.package_name })
-        .then((response) => res.json(response))
-        .catch((err) => res.status(404).json({ error: err.toString() }));
+    let payload = {appId: req.body.package_name}
+
+    if (req.body.country) {
+        payload.country = req.body.country
+    }
+
+    appStore.app(payload).then(response => res.json(response))
+        .catch(err => res.status(404).json({"error":err.toString()}));
 });
